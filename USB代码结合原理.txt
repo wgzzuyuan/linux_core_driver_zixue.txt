@@ -172,6 +172,28 @@ stru ctusb_driver{
 
 
 
+我的总结：
+USB设备描述符（usb_device_descriptor）、
+
+USB配置描述符（usb_config_descriptor）、
+
+USB接口描述符（usb_interface_descriptor）、
+
+USB端点描述符（usb_endpoint_descriptor）、
+
+一个设备描述符可以有多个配置描述符
+
+一个配置描述符可以有多个接口描述符（比如声卡驱动,就有两个接口：录音接口和播放接口）
+
+一个接口描述符可以有多个端点描述符
+
+我的疑问： 为什么一个接口描述符可以有多个端点描述符？？？
+
+
+
+
+
+
 
 
 
