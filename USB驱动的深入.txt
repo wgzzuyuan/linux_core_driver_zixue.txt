@@ -1,12 +1,55 @@
-5. usb设备驱动的几个重要的数据结构
+5.    usb设备驱动的几个重要的数据结构
 
-usb_driver,usb_device,usb_bus.
+  usb_driver,usb_device,usb_bus.
 
 
 6,   usb_driver中的probe函数扫描连接到主机上的usb设备，并且注册usb接口驱动。
+disconnect函数是当usb设备移除时调用
 
 
-7,
+7,   
+
+stru ctusb_driver{
+	const char *name;
+
+	int (*probe) (stru ct u sb_interface*intf,
+	const stru ctu sb_device_id*id);
+
+	void (*disconnect) (stru ct u sb_interface*intf);   //拔掉USB的时候，调用这个函数，打印信息
+
+	int (*u nlocked_ioctl) (stru ctu sb_interface*intf,u nsigned intcode,
+	void *bu f);
+
+	int (*su spend) (stru ct u sb_interface *intf,pm_message_tmessage);
+	int (*resu me) (stru ct u sb_interface *intf);
+	int (*reset_resu me)(stru ctu sb_interface*intf);
+
+	int (*pre_reset)(stru ct u sb_interface*intf);
+	int (*post_reset)(stru ctu sb_interface*intf);
+
+	const stru ctu sb_device_id*id_table;
+
+	stru ctu sb_dynidsdynids;
+	stru ctu sbdrv_wrapdrvwrap;
+	u nsigned int no_dynamic_id:1;
+	u nsigned int su pports_au tosu spend:1;
+	u nsigned int soft_u nbind:1;
+};
+
+
+4. usb设备组成
+
+(1)一个usb设备由可以有一个或多个配置
+
+(2)一个配置通常可以有一个或多个接口
+
+(3)一个接口通常可以有一个或多个端点
+
+通常所尽的usb设备驱动是指接口驱动，即一个接口对应一个驱动。
+
+所以Linux usb设备有四大描述符，分别为设备描述符，配置描述符，接口描述符，端点描述符。
+
+
 
 
 
