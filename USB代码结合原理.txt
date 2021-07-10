@@ -1,0 +1,59 @@
+1,   此文主要记录USB主机和USB从机是怎么交互的，介绍这个过程，协议要整体有个了解，知道协议在哪里用了，从原理的这个角度去评估技术的水准。
+
+设备描述结构体：记录此描述符的类型为设备描述符，设备码(就是表示你的 USB 设备是U盘，鼠标，还是键盘)，厂商标志，厂商的产品标志，产品信息的字符串，
+我19年看到的USB在初始化的时候看到的金士顿产品的信息就是打印出的USB的描述符中的信息。
+
+
+struct usb_device_descriptor
+{
+      _u8 bLength;  //此描述符的字节数
+      _u8  bDescriptorType; //描述符的种类为设备
+      _u16 bcdUSB;  //此设备与描述符兼容的usb设备说明版本号(BCD码)
+      _u8   bDeviceClass; //设备类码
+      _u8   bDeviceSubClass; //设备子类码
+      _u8   bDeviceProtocol; //协议码
+      _u8   bMaxPacketSize0; //端点0的最大包大小
+      _u16 idVendor; //厂商标志
+      _u16  idProduct; //产品标志
+      _u16 bcdDevice; //设备发行号
+      _u8   iManufacturer; //描述厂商的字串索引
+
+      _u8   iProduct; //描述产品信息的字串索引
+
+      _u8  iSerialNumber; //描述设备序列号信息的字串索引
+      _u8  bNumConfigurations;//此设备支持的配置数
+
+  }_attribute_ ((packed));
+
+ 
+
+设备类码的典型值如下:
+
+ 
+
+#define USB_CLASS_PER_INTERFACE 0
+
+#define USB_CLAS_AUDIO 1     //声音设备
+
+#define USB_CLASS_COMM 2   // 调制解调器，网卡，ISDN连接
+
+#define USB_CLASS_HID  3    //HID设备，如鼠标，键盘
+
+#define USB_CLASS_PHYSICAL 5 //物理设备
+
+#define USB_CLASS_STILL_IMAGE 6 //静止图像捕捉设备
+
+#define USB_CLASS_PRINTER 7//打印机
+
+#define USB_CLASS_MASS_STORAGE //8 批量存储设备
+
+#define USB_CLASS_HUB 9   //USB HUBS
+
+#define USB_CLASS_CSCID 0x0B  //智能卡
+
+#define USB_CLASS_VIDEO 0X0E //视频设备，如网络摄像头
+
+#define USB_CLASS_VENDOR_SPEC 0xFF //厂商自定义的设备
+
+
+
