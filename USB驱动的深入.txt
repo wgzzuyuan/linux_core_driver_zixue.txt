@@ -1,0 +1,12 @@
+5. usb设备驱动的几个重要的数据结构
+
+usb_driver,usb_device,usb_bus.
+
+
+6,   usb_driver中的probe函数扫描连接到主机上的usb设备，并且注册usb接口驱动。
+
+
+7,
+
+
+
