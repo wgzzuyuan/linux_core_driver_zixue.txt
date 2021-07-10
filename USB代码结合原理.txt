@@ -3,7 +3,7 @@
 设备描述结构体：记录此描述符的类型为设备描述符，设备码(就是表示你的 USB 设备是U盘，鼠标，还是键盘)，厂商标志，厂商的产品标志，产品信息的字符串，
 我19年看到的USB在初始化的时候看到的金士顿产品的信息就是打印出的USB的描述符中的信息。
 
-
+第一个重点：设备描述符
 struct usb_device_descriptor
 {
       _u8 bLength;  //此描述符的字节数
@@ -54,6 +54,123 @@ struct usb_device_descriptor
 #define USB_CLASS_VIDEO 0X0E //视频设备，如网络摄像头
 
 #define USB_CLASS_VENDOR_SPEC 0xFF //厂商自定义的设备
+
+第二个重点：
+配置描述符这个是针对USB设备定义的，比如键盘，鼠标，打印机，U盘，
+比如有的键盘供电对电量的要求是不一样的，当是200MA供电的时候，单片机只能提供给这个键盘供电100MA，此时这个键盘设备就不会工作，
+USB的配置描述符解决了这个问题，设计这个键盘的时候，设计2种电流供电，此时比如说低功耗这个概念就用上了。
+
+struct usb_config_descriptor{
+
+ _u8 bLength ;//此描述符的字节数
+
+_u8 bDescriptorType; //配置描述符类型
+
+_u16 wTotalLength; //此配置信息的总长(包括配置，接口，端点和设备类型及厂商定义的描述符)
+
+_u8 bNumInterfaces; //此配置所支持的接口数
+
+_u8 bConfigurationValue ;//在setConfiguration()请求中用作参数来选定此配置
+
+_u8 iConfiguration; //描述此配置的字串描述符索引
+
+_u8 bmAttributes; //电源配置特性
+
+_u8 bMaxpowe;r //此配置下的总线电源耗电量
+
+}_attribute_ ((packed));
+
+
+第三个重点：接口描述符：
+struct usb_interface_descriptor{
+ 
+
+_u8 bLength ;//此描述符的字节数
+
+_u8 bDescriptorType;//接口描述符类
+
+_u8 bInterfacNumber;//接口号，当前配置所支持的接口数组索引,从0开始
+
+_u8 bNumEndpoints ;//此接口用的端点数量，如果是0,说明此接口只有缺省控制通道
+
+_u8 bAlernateSetting;//可选设备的索引值
+
+_u8 bInterfaceClass;// 类值,0值作为将来保留使用如果是0FFH,此接口由厂商说明
+
+_u8 bInterfaceSubClass;//子类码
+
+_u8 bInterfaceProtocol;//协议码
+
+_u8 iInterface;//描述此接口的字串描述符索引
+
+ 
+
+}_attribute_ ((packed));
+
+
+
+第四个重点：端点描述符
+端点描述符做了什么，端点描述符用来控制USB传输的类型，是控制，等时，批量，还是中断传输
+struct usb_endpoint_descriptor{
+_u8 bLength ;//此描述符的字节数
+
+_u8 bDescriptorType;//端点描述符类
+
+_u8 bEndpointAddress;此描述符所描述的端点的地址
+
+_u8 bmAtrributes;//所指定的端点的特性，如果是00=控制传送,01=等时传送,10=批传送,11=中断传送
+
+_u8 wMaxPacketSize;//当前配置下端点能够发送与接收的最大数据包大小
+
+_u8 bInterval;//轮询数据传送端点的时间间隙
+
+_u8 bRefresh
+
+_u8 bSynchAddress
+
+}_attribute_ ((packed));
+
+
+
+5.USB的各个描述符就是用下面的3个数据结构来操作的。
+
+usb_driver,usb_device,usb_bus.
+
+
+第5个重点：USB驱动结构体
+该结构体中的 probe 函数扫描USB设备并且注册USB设备。
+该结构体负责USB的注册和断开链接。
+stru ctusb_driver{
+	const char *name;
+
+	int (*probe) (stru ct u sb_interface*intf,
+	const stru ctu sb_device_id*id);
+
+	void (*disconnect) (stru ct u sb_interface*intf);
+	
+	int (*u nlocked_ioctl) (stru ctu sb_interface*intf,u nsigned intcode,
+	void *bu f);
+
+	int (*su spend) (stru ct u sb_interface *intf,pm_message_tmessage);
+	int (*resu me) (stru ct u sb_interface *intf);
+	int (*reset_resu me)(stru ctu sb_interface*intf);
+
+	int (*pre_reset)(stru ct u sb_interface*intf);
+	int (*post_reset)(stru ctu sb_interface*intf);
+
+	const stru ctu sb_device_id*id_table;
+
+	stru ctu sb_dynidsdynids;
+	stru ctu sbdrv_wrapdrvwrap;
+	u nsigned int no_dynamic_id:1;
+	u nsigned int su pports_au tosu spend:1;
+	u nsigned int soft_u nbind:1;
+};
+
+
+
+
+
 
 
 
